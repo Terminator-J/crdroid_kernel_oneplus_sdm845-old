@@ -16,3 +16,5 @@ has all the problems of rewritten display handling that still never incorporated
 different in alpha layer blending, FOD handling, and display mode handling than all of the kernels for newer OnePlus devices. In turn, 
 this causes the sdm845-common device tree to also have to be entirely different; hampering any efforts to backport new features or make
 things more consistent between OP 6-series, 7-series, 8-series, or now 9-series for ease of updating/sharing code. Oh well!
+___
+11.0-m08 was released as the 20210721 crDroid 7.8 official build for OnePlus 6/6T
