@@ -4119,15 +4119,6 @@ int dsi_panel_enable(struct dsi_panel *panel)
 	panel->panel_initialized = true;
 	mutex_unlock(&panel->panel_lock);
 
-	dsi_panel_init_display_modes(panel);
-
-	return rc;
-}
-
-int dsi_panel_init_display_modes(struct dsi_panel *panel)
-{
-	int rc;
-
 	if (panel->hbm_mode)
 		dsi_panel_apply_hbm_mode(panel);
 	dsi_panel_apply_display_mode(panel);
@@ -4310,7 +4301,7 @@ int dsi_panel_apply_hbm_mode(struct dsi_panel *panel)
 	return rc;
 }
 
-int dsi_panel_apply_display_mode_locked(struct dsi_panel *panel)
+int dsi_panel_apply_display_mode(struct dsi_panel *panel)
 {
 	enum dsi_cmd_set_type type;
 	int rc;
@@ -4322,17 +4313,8 @@ int dsi_panel_apply_display_mode_locked(struct dsi_panel *panel)
 		default: type = DSI_CMD_SET_MODE_DEFAULT; break;
 	}
 
-	rc = dsi_panel_tx_cmd_set(panel, type);
-
-	return rc;
-}
-
-int dsi_panel_apply_display_mode(struct dsi_panel *panel)
-{
-	int rc;
-
 	mutex_lock(&panel->panel_lock);
-	rc = dsi_panel_apply_display_mode_locked(panel);
+	rc = dsi_panel_tx_cmd_set(panel, type);
 	mutex_unlock(&panel->panel_lock);
 
 	return rc;
