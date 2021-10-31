@@ -308,8 +308,6 @@ int dsi_panel_enable(struct dsi_panel *panel);
 
 int dsi_panel_post_enable(struct dsi_panel *panel);
 
-int dsi_panel_init_display_modes(struct dsi_panel *panel);
-
 int dsi_panel_pre_disable(struct dsi_panel *panel);
 
 int dsi_panel_disable(struct dsi_panel *panel);
@@ -320,7 +318,6 @@ int dsi_panel_post_unprepare(struct dsi_panel *panel);
 
 int dsi_panel_apply_hbm_mode(struct dsi_panel *panel);
 
-int dsi_panel_apply_display_mode_locked(struct dsi_panel *panel);
 int dsi_panel_apply_display_mode(struct dsi_panel *panel);
 
 int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl);
