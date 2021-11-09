@@ -637,6 +637,21 @@ static ssize_t oneplus_display_set_forcescreenfp(struct device *dev,
 	return count;
 }
 
+int oneplus_panel_status = 0;
+static ssize_t op_display_get_power_status(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%d\n", oneplus_panel_status);
+}
+
+static ssize_t op_display_set_power_status(struct device *dev,
+		struct device_attribute *attr,
+		const char *buf, size_t count)
+{
+	sscanf(buf, "%d", &oneplus_panel_status);
+	return count;
+}
+
 static ssize_t op_display_get_dimlayer_enable(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -880,6 +895,7 @@ static ssize_t native_display_srgb_color_mode_store(struct device *dev,
 	return count;
 }
 /******************************************************************/
+
 static DEVICE_ATTR_RW(status);
 static DEVICE_ATTR_RO(enabled);
 static DEVICE_ATTR_RO(dpms);
@@ -898,24 +914,15 @@ static DEVICE_ATTR_RO(panel_serial_number);
 static DEVICE_ATTR_RW(dynamic_dsitiming);
 static DEVICE_ATTR_RO(panel_mismatch);
 static DEVICE_ATTR_RW(aod_test);
-static DEVICE_ATTR(dim_alpha, S_IRUGO|S_IWUSR, oneplus_display_get_dim_alpha,
-	oneplus_display_set_dim_alpha);
-static DEVICE_ATTR(force_screenfp, S_IRUGO|S_IWUSR,
-	oneplus_display_get_forcescreenfp, oneplus_display_set_forcescreenfp);
-static DEVICE_ATTR(notify_fppress, S_IRUGO|S_IWUSR, NULL,
-	oneplus_display_notify_fp_press);
-static DEVICE_ATTR(notify_dim, S_IRUGO|S_IWUSR, NULL,
-	oneplus_display_notify_dim);
-static DEVICE_ATTR(notify_aod, S_IRUGO|S_IWUSR, NULL,
-	oneplus_display_notify_aod_hid);
-
-static DEVICE_ATTR(dp_en, S_IRUGO|S_IWUSR,
-       op_display_get_dp_enable, op_display_set_dp_enable);
-static DEVICE_ATTR(dither_en, S_IRUGO|S_IWUSR,
-       op_display_get_dither_enable, op_display_set_dither_enable);
-static DEVICE_ATTR(dimlayer_bl_en, S_IRUGO|S_IWUSR,
-       op_display_get_dimlayer_enable, op_display_set_dimlayer_enable);
-
+static DEVICE_ATTR(dim_alpha, S_IRUGO|S_IWUSR, oneplus_display_get_dim_alpha, oneplus_display_set_dim_alpha);
+static DEVICE_ATTR(force_screenfp, S_IRUGO|S_IWUSR, oneplus_display_get_forcescreenfp, oneplus_display_set_forcescreenfp);
+static DEVICE_ATTR(notify_fppress, S_IRUGO|S_IWUSR, NULL, oneplus_display_notify_fp_press);
+static DEVICE_ATTR(notify_dim, S_IRUGO|S_IWUSR, NULL, oneplus_display_notify_dim);
+static DEVICE_ATTR(notify_aod, S_IRUGO|S_IWUSR, NULL, oneplus_display_notify_aod_hid);
+static DEVICE_ATTR(dp_en, S_IRUGO|S_IWUSR, op_display_get_dp_enable, op_display_set_dp_enable);
+static DEVICE_ATTR(dither_en, S_IRUGO|S_IWUSR, op_display_get_dither_enable, op_display_set_dither_enable);
+static DEVICE_ATTR(dimlayer_bl_en, S_IRUGO|S_IWUSR, op_display_get_dimlayer_enable, op_display_set_dimlayer_enable);
+static DEVICE_ATTR(power_status, S_IRUGO|S_IWUSR, op_display_get_power_status, op_display_set_power_status);
 static DEVICE_ATTR_RW(dsi_panel_command);
 static DEVICE_ATTR_RW(dsi_seed_command);
 
@@ -948,6 +955,7 @@ static struct attribute *connector_dev_attrs[] = {
 	&dev_attr_dimlayer_bl_en.attr,
 	&dev_attr_dp_en.attr,
 	&dev_attr_dither_en.attr,
+	&dev_attr_power_status.attr,
 	NULL
 };
 
