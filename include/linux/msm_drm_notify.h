@@ -31,8 +31,9 @@ enum {
 	MSM_DRM_BLANK_NORMAL,
 	/* panel: power off */
 	MSM_DRM_BLANK_POWERDOWN_CUST,
-	/* panel: fingerprit on display */
+
 	MSM_DRM_ONSCREENFINGERPRINT_EVENT,
+	/*#endif*/
 };
 
 enum msm_drm_display_id {
@@ -48,6 +49,6 @@ struct msm_drm_notifier {
 	void *data;
 };
 
-extern int msm_drm_register_client(struct notifier_block *nb);
-extern int msm_drm_unregister_client(struct notifier_block *nb);
+int msm_drm_register_client(struct notifier_block *nb);
+int msm_drm_unregister_client(struct notifier_block *nb);
 #endif
