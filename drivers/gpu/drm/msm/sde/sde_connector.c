@@ -698,13 +698,13 @@ static int _sde_connector_update_hbm(struct sde_connector *c_conn)
 			else
 				fingerprint_mode = sde_crtc_get_fingerprint_mode(c_conn->encoder->crtc->state);
 			} else {
-		if (!(sde_crtc_get_fingerprint_mode(c_conn->encoder->crtc->state)))
-			fingerprint_mode = false;
-		else if (oneplus_dim_status == 1)
-			fingerprint_mode = !!oneplus_dim_status;
-		else
-			fingerprint_mode = sde_crtc_get_fingerprint_mode(c_conn->encoder->crtc->state);
-		}
+			if (!(sde_crtc_get_fingerprint_mode(c_conn->encoder->crtc->state)))
+				fingerprint_mode = false;
+			else if (oneplus_dim_status == 1)
+				fingerprint_mode = !!oneplus_dim_status;
+			else
+				fingerprint_mode = sde_crtc_get_fingerprint_mode(c_conn->encoder->crtc->state);
+			}
 		} else {
 			if (dsi_display->panel->aod_status == 1) {
 				if (oneplus_dim_status == 5)
@@ -716,8 +716,11 @@ static int _sde_connector_update_hbm(struct sde_connector *c_conn)
 			}
 		}
 
-	if (fingerprint_mode != dsi_display->panel->is_hbm_enabled) {
-		dsi_display->panel->is_hbm_enabled = fingerprint_mode;
+		if (!dsi_display->panel->panel_initialized)
+			fingerprint_mode = false;
+
+		if (fingerprint_mode != dsi_display->panel->is_hbm_enabled) {
+			dsi_display->panel->is_hbm_enabled = fingerprint_mode;
 
 		if (fingerprint_mode) {
 			HBM_flag = true;
