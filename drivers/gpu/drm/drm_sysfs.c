@@ -849,7 +849,23 @@ static ssize_t native_display_srgb_color_mode_store(struct device *dev,
 	return count;
 }
 
+int oneplus_auth_status = 0;
 int oneplus_panel_status = 0;
+static ssize_t op_display_get_auth_status(struct device *dev,
+				struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%d\n", oneplus_auth_status);
+}
+
+static ssize_t op_display_set_auth_status(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	sscanf(buf, "%d", &oneplus_auth_status);
+
+	return count;
+}
+
 static ssize_t op_display_get_power_status(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -904,6 +920,7 @@ static DEVICE_ATTR(dimlayer_bl_en, S_IRUGO|S_IWUSR,
 
 static DEVICE_ATTR_RW(dsi_panel_command);
 static DEVICE_ATTR_RW(dsi_seed_command);
+static DEVICE_ATTR(auth_status, S_IRUGO | S_IWUSR, op_display_get_auth_status, op_display_set_auth_status);
 static DEVICE_ATTR(power_status, S_IRUGO | S_IWUSR, op_display_get_power_status, op_display_set_power_status);
 
 static struct attribute *connector_dev_attrs[] = {
@@ -935,6 +952,7 @@ static struct attribute *connector_dev_attrs[] = {
 	&dev_attr_dimlayer_bl_en.attr,
 	&dev_attr_dp_en.attr,
 	&dev_attr_dither_en.attr,
+	&dev_attr_auth_status.attr,
 	&dev_attr_power_status.attr,
 	NULL
 };
