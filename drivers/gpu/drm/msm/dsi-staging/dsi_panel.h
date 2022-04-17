@@ -374,6 +374,7 @@ int dsi_panel_set_native_display_p3_mode(struct dsi_panel *panel, int level);
 int dsi_panel_set_native_display_wide_color_mode(struct dsi_panel *panel, int level);
 int dsi_panel_set_native_display_srgb_color_mode(struct dsi_panel *panel, int level);
 int dsi_panel_set_customer_srgb_mode(struct dsi_panel *panel, int level);
+int dsi_panel_set_native_loading_effect_mode(struct dsi_panel *panel, int level);
 int dsi_panel_set_customer_p3_mode(struct dsi_panel *panel, int level);
 int dsi_panel_update_dsi_seed_command(struct dsi_cmd_desc *cmds, enum dsi_cmd_set_type type, const char *data);
 int dsi_panel_send_dsi_seed_command(struct dsi_panel *panel);

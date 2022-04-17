@@ -1889,6 +1889,8 @@ const char *cmd_set_prop_map[DSI_CMD_SET_MAX] = {
 	"qcom,mdss-dsi-panel-display-wide-color-mode-off-command",
 	"qcom,mdss-dsi-panel-display-srgb-color-mode-on-command",
 	"qcom,mdss-dsi-panel-display-srgb-color-mode-off-command",
+	"qcom,mdss-dsi-loading-effect-enable-command",
+	"qcom,mdss-dsi-loading-effect-disable-command",
 	"qcom,mdss-dsi-customer-srgb-enable-command",
 	"qcom,mdss-dsi-customer-srgb-disable-command",
 	"qcom,mdss-dsi-customer-p3-enable-command",
@@ -1964,6 +1966,8 @@ const char *cmd_set_state_map[DSI_CMD_SET_MAX] = {
 	"qcom,mdss-dsi-panel-display-wide-color-mode-off-command-state",
 	"qcom,mdss-dsi-panel-display-srgb-color-mode-on-command-state",
 	"qcom,mdss-dsi-panel-display-srgb-color-mode-off-command-state",
+	"qcom,mdss-dsi-loading-effect-enable-command-state",
+	"qcom,mdss-dsi-loading-effect-disable-command-state",
 	"qcom,mdss-dsi-customer-srgb-enable-command-state",
 	"qcom,mdss-dsi-customer-srgb-disable-command-state",
 	"qcom,mdss-dsi-customer-p3-enable-command-state",
@@ -3250,6 +3254,11 @@ static int dsi_panel_parse_oem_config(struct dsi_panel *panel,
 		of_property_read_bool(of_node, "qcom,mdss-bl-high2bit");
 	if (panel->bl_config.bl_high2bit)
 		pr_debug("bl_high2bit:%d\n", panel->bl_config.bl_high2bit);
+
+	panel->naive_display_loading_effect_mode =
+		of_property_read_bool(of_node, "qcom,mdss-loading-effect");
+	if (panel->naive_display_loading_effect_mode)
+		pr_info("naive_display_loading_effect_mode:%d\n", panel->naive_display_loading_effect_mode);
 
 	tmp = 0;
 	rc = of_property_read_u32(of_node, "qcom,mdss-dsi-acl-cmd-index", &tmp);
@@ -5103,6 +5112,32 @@ int dsi_panel_set_native_display_srgb_color_mode(struct dsi_panel *panel, int le
 		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_SET_NATIVE_DISPLAY_SRGB_COLOR_OFF);
 		pr_err("Native  srgb color Mode Off.\n");
     }
+	mutex_unlock(&panel->panel_lock);
+return rc;
+}
+
+int dsi_panel_set_native_loading_effect_mode(struct dsi_panel *panel, int level)
+{
+	int rc = 0;
+	u32 count;
+	struct dsi_display_mode *mode;
+
+	if (!panel || !panel->cur_mode) {
+		pr_err("Invalid params\n");
+		return -EINVAL;
+	}
+	mode = panel->cur_mode;
+	mutex_lock(&panel->panel_lock);
+
+	if (level) {
+		count = mode->priv_info->cmd_sets[DSI_CMD_LOADING_EFFECT_ON].count;
+		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_LOADING_EFFECT_ON);
+		pr_err("turn on loading effect\n");
+	} else {
+		count = mode->priv_info->cmd_sets[DSI_CMD_LOADING_EFFECT_OFF].count;
+		rc = dsi_panel_tx_cmd_set(panel, DSI_CMD_LOADING_EFFECT_OFF);
+		pr_err("turn off loading effect.\n");
+	}
 	mutex_unlock(&panel->panel_lock);
 return rc;
 }
