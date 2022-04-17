@@ -752,6 +752,42 @@ static ssize_t native_display_wide_color_mode_show(struct device *dev,
 	return ret;
 }
 
+static ssize_t native_display_loading_effect_mode_store(struct device *dev,
+	struct device_attribute *attr, const char *buf, size_t count)
+{
+	struct drm_connector *connector = to_drm_connector(dev);
+	int ret = 0;
+	int native_display_loading_effect_mode = 0;
+
+	ret = kstrtoint(buf, 10, &native_display_loading_effect_mode);
+	if (ret) {
+		pr_err("kstrtoint failed. ret=%d\n", ret);
+		return ret;
+	}
+
+	ret = dsi_display_set_native_loading_effect_mode(connector, native_display_loading_effect_mode);
+	if (ret) {
+		pr_err("set loading effect  mode(%d) fail\n", native_display_loading_effect_mode);
+	}
+	return count;
+}
+
+static ssize_t native_display_loading_effect_mode_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct drm_connector *connector = to_drm_connector(dev);
+	int ret = 0;
+	int native_display_loading_effect_mode = 0;
+
+	native_display_loading_effect_mode = dsi_display_get_native_display_loading_effect_mode(connector);
+
+	ret = scnprintf(buf, PAGE_SIZE, "native display loading effect mode = %d\n"
+											"0--native display loading effect mode Off\n"
+											"1--native display loading effect mode On\n",
+											native_display_loading_effect_mode);
+	return ret;
+}
+
 static ssize_t native_display_customer_p3_mode_store(struct device *dev,
 	struct device_attribute *attr, const char *buf, size_t count)
 {
@@ -924,6 +960,7 @@ static DEVICE_ATTR_RW(aod);
 static DEVICE_ATTR_RW(aod_disable);
 static DEVICE_ATTR_RW(native_display_p3_mode);
 static DEVICE_ATTR_RW(native_display_wide_color_mode);
+static DEVICE_ATTR_RW(native_display_loading_effect_mode);
 static DEVICE_ATTR_RW(native_display_srgb_color_mode);
 static DEVICE_ATTR_RW(native_display_customer_p3_mode);
 static DEVICE_ATTR_RW(native_display_customer_srgb_mode);
@@ -966,6 +1003,7 @@ static struct attribute *connector_dev_attrs[] = {
 	&dev_attr_aod_disable.attr,
 	&dev_attr_native_display_p3_mode.attr,
 	&dev_attr_native_display_wide_color_mode.attr,
+	&dev_attr_native_display_loading_effect_mode.attr,
 	&dev_attr_native_display_srgb_color_mode.attr,
 	&dev_attr_native_display_customer_p3_mode.attr,
 	&dev_attr_native_display_customer_srgb_mode.attr,

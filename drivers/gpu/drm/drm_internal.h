@@ -122,6 +122,8 @@ int dsi_display_set_native_display_wide_color_mode(struct drm_connector *connect
 int dsi_display_get_native_display_wide_color_mode(struct drm_connector *connector);
 int dsi_display_set_native_display_srgb_color_mode(struct drm_connector *connector, int level);
 int dsi_display_get_native_display_srgb_color_mode(struct drm_connector *connector);
+int dsi_display_set_native_loading_effect_mode(struct drm_connector *connector, int level);
+int dsi_display_get_native_display_loading_effect_mode(struct drm_connector *connector);
 int dsi_display_set_customer_srgb_mode(struct drm_connector *connector, int level);
 int dsi_display_set_customer_p3_mode(struct drm_connector *connector, int level);
 int dsi_display_get_customer_srgb_mode(struct drm_connector *connector);
